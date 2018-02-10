@@ -2,25 +2,37 @@ var db = require('../db');
 
 module.exports = {
   messages: {
-    get: function () {
-      //console.log('here is the url',req.url);
-    }, // a function which produces all the messages
-    post: function (req) {
+    get: function (req,res) {
+      var messageQuery = `select message, username, roomname, created_at from messages;`;
+      var onEnd = function(data){
+        console.log('here is the raw data', data);
+        res.end(JSON.stringify(data));
+      };
+      db(messageQuery, onEnd);
 
-      console.log('invoking post from models', req.body);
-      
-    // a function which can be used to insert a message into the database
+     
+     
+    }, // a function which produces all the messages
+    post: function (req,res) {
+      var roomname = req.body.roomname;
+      var username = req.body.username;
+      var text = req.body.message;
+    
+      var messageQuery = `INSERT INTO messages (message,username,roomname) VALUES("${text}",\'${username}\',\'${roomname}\');`;
+    
+      db(messageQuery);  
+      res.end();
     },
   },
   users: {
     // Ditto as above.
-    get: function () {},
-    post: function (req) {
+    get: function (req,res) {
+    },
+    post: function (req, res) {
       var username = req.body.username;
-      var query = `select name from users where name='zaid'`;
-      //var query = `INSERT INTO users VALUES(2, \'${username}\');`;
+      var query = `INSERT INTO users (name) VALUES(\'${username}\');`;
       db(query);
-
+      res.end();
     }
   }
 };
