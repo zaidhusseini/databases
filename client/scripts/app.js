@@ -63,11 +63,12 @@ var app = {
       data: {},
       contentType: 'application/json',
       success: function(data) {
+        data = {results: JSON.parse(data)};
+
         console.log('received data', data);
-        
+
         // Don't bother if we have nothing to work with
         if (!data.results || !data.results.length) { return; }
-
         // Store messages for caching later
         app.messages = data.results;
 
@@ -164,7 +165,7 @@ var app = {
     }
 
     var $message = $('<br><span/>');
-    $message.text(message.text).appendTo($chat);
+    $message.text(message.message).appendTo($chat);
 
     // Add the message to the UI
     app.$chats.append($chat);
@@ -216,7 +217,7 @@ var app = {
   handleSubmit: function(event) {
     var message = {
       username: app.username,
-      text: app.$message.val(),
+      message: app.$message.val(),
       roomname: app.roomname || 'lobby'
     };
 
