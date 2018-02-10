@@ -32,7 +32,7 @@ var app = {
     // Poll for new messages
     setInterval(function() {
       app.fetch(true);
-    }, 1000);
+    }, 2000);
   },
 
   send: function(message) {
@@ -61,11 +61,10 @@ var app = {
     $.ajax({
       url: app.server,
       type: 'GET',
-      data: {},
       contentType: 'application/json',
       success: function(data) {
-
         data = {results: JSON.parse(data)};
+        
 
         console.log('received data', data);
 

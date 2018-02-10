@@ -21,8 +21,7 @@ module.exports = function(query, callback){
   dbConnection.query(queryString, (err, results)=> {
     if (!queryString.includes('INSERT')){
       callback(results);
-    };
+    }
   });
-
 };
 

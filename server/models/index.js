@@ -3,12 +3,12 @@ var db = require('../db');
 module.exports = {
   messages: {
     get: function (req,res) {
-      var messageQuery = `select message, username, roomname, created_at from messages;`;
+      var messageQuery = `select message, username, roomname, id, created_at from messages;`;
       var onEnd = function(data){
-        console.log('here is the raw data', data);
         res.end(JSON.stringify(data));
       };
       db(messageQuery, onEnd);
+      
 
      
      
