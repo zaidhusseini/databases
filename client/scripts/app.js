@@ -32,7 +32,7 @@ var app = {
     // Poll for new messages
     setInterval(function() {
       app.fetch(true);
-    }, 10000);
+    }, 1000);
   },
 
   send: function(message) {
@@ -41,12 +41,13 @@ var app = {
     // POST the message to the server
     $.ajax({
       url: app.server,
+      contentType:'application/json',
       type: 'POST',
       data: message,
       success: function (data) {
         // Clear messages input
         app.$message.val('');
-        console.log('sent data', data);
+        console.log('sent data', message);
         // Trigger a fetch to update the messages, pass true to animate
         app.fetch();
       },
@@ -63,6 +64,7 @@ var app = {
       data: {},
       contentType: 'application/json',
       success: function(data) {
+
         data = {results: JSON.parse(data)};
 
         console.log('received data', data);
@@ -76,7 +78,7 @@ var app = {
         var mostRecentMessage = data.results[data.results.length - 1];
 
         // Only bother updating the DOM if we have a new message
-        if (mostRecentMessage.objectId !== app.lastMessageId) {
+        if (mostRecentMessage.id !== app.lastMessageId) {
           // Update the UI with the fetched rooms
           app.renderRoomList(data.results);
 
@@ -84,7 +86,7 @@ var app = {
           app.renderMessages(data.results, animate);
 
           // Store the ID of the most recent message
-          app.lastMessageId = mostRecentMessage.objectId;
+          app.lastMessageId = mostRecentMessage.id;
         }
       },
       error: function(error) {
@@ -168,7 +170,7 @@ var app = {
     $message.text(message.message).appendTo($chat);
 
     // Add the message to the UI
-    app.$chats.append($chat);
+    app.$chats.prepend($chat);
 
   },
 
@@ -220,7 +222,6 @@ var app = {
       message: app.$message.val(),
       roomname: app.roomname || 'lobby'
     };
-
     app.send(JSON.stringify(message));
 
     // Stop the form from submitting
